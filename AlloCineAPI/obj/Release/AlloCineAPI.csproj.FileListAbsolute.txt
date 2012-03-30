@@ -1,5 +1,0 @@
-C:\Users\kcopvl\Documents\Patou\Visual Studio 2010\Projects\AlloCineAPI\AlloCineAPI\bin\Release\AlloCineAPI.dll
-C:\Users\kcopvl\Documents\Patou\Visual Studio 2010\Projects\AlloCineAPI\AlloCineAPI\bin\Release\AlloCineAPI.pdb
-C:\Users\kcopvl\Documents\Patou\Visual Studio 2010\Projects\AlloCineAPI\AlloCineAPI\obj\Release\ResolveAssemblyReference.cache
-C:\Users\kcopvl\Documents\Patou\Visual Studio 2010\Projects\AlloCineAPI\AlloCineAPI\obj\Release\AlloCineAPI.dll
-C:\Users\kcopvl\Documents\Patou\Visual Studio 2010\Projects\AlloCineAPI\AlloCineAPI\obj\Release\AlloCineAPI.pdb
