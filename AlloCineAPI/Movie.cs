@@ -66,6 +66,9 @@ namespace AlloCine
         [DataMember(Name = "trailer")]
         public Trailer Trailer { get; set; }
 
+        [DataMember(Name = "trailerEmbed")]
+        public string TrailerEmbed { get; set; }
+
         [DataMember(Name = "link")]
         public List<Link> LinkList { get; set; }
 

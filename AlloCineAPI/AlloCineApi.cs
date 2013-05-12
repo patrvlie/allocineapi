@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 
 
@@ -13,17 +17,20 @@ namespace AlloCine
         #region Declarations
         private readonly WebClient _client;
         private const string AlloCineBaseAddress = "http://api.allocine.fr/rest/v3/";
-        private const string SearchUrl = "search?partner=YW5kcm9pZC12M3M&{0}";
-        private const string MovieGetInfoUrl = "movie?partner=YW5kcm9pZC12M3M&{0}";
-        private const string MovieGetReviewListUrl = "reviewlist?partner=YW5kcm9pZC12M3M&{0}";
-        private const string PersonGetInfoUrl = "person?partner=YW5kcm9pZC12M3M&{0}";
-        private const string PersonGetFilmographyUrl = "filmography?partner=YW5kcm9pZC12M3M&{0}";
-        private const string MediaGetInfoUrl = "media?partner=YW5kcm9pZC12M3M&{0}";
-        private const string TvSeriesGetInfoUrl = "tvseries?partner=YW5kcm9pZC12M3M&{0}";
-        private const string TvSeriesSeasonGetInfoUrl = "season?partner=YW5kcm9pZC12M3M&{0}";
-        private const string TvSeriesEpisodeGetInfoUrl = "episode?partner=YW5kcm9pZC12M3M&{0}"; 
+        private const string AlloCineSecretKey = "29d185d98c984a359e6e6f26a0474269";
+        private const string AlloCinePartnerKey = "100043982026";
+        private const string MobileBrowserUserAgent = "Dalvik/1.6.0 (Linux; U; Android 4.2.2; Nexus 4 Build/JDQ39E)";
+        private const string SearchUrl = "search?{0}";
+        private const string MovieGetInfoUrl = "movie?{0}";
+        private const string MovieGetReviewListUrl = "reviewlist?{0}";
+        private const string PersonGetInfoUrl = "person?{0}";
+        private const string PersonGetFilmographyUrl = "filmography?{0}";
+        private const string MediaGetInfoUrl = "media?{0}";
+        private const string TvSeriesGetInfoUrl = "tvseries?{0}";
+        private const string TvSeriesSeasonGetInfoUrl = "season?{0}";
+        private const string TvSeriesEpisodeGetInfoUrl = "episode?{0}";
         #endregion
-       
+
 
         #region AlloCineApi Constructors
         /// <summary>
@@ -31,7 +38,7 @@ namespace AlloCine
         /// </summary>
         public AlloCineApi()
         {
-            _client = new WebClient { BaseAddress = AlloCineBaseAddress };
+            _client = new WebClient {BaseAddress = AlloCineBaseAddress, Encoding = Encoding.UTF8};
         }
 
         /// <summary>
@@ -80,12 +87,15 @@ namespace AlloCine
         public Feed Search(string query, IEnumerable<TypeFilters> types, int resultsPerPage, int pageNumber)
         {
             var nvc = new NameValueCollection();
+
+            nvc["partner"] = AlloCinePartnerKey;
             nvc["format"] = ResponseFormat.Json.ToString().ToLower();
+
             if (!string.IsNullOrEmpty(query))
-                nvc["q"] = HttpUtility.UrlEncodeUnicode(query);
+                nvc["q"] = UrlEncodeUpperCase(query);
 
             if (types != null)
-                nvc["filter"] = string.Join(",", types).ToLower();
+                nvc["filter"] = UrlEncodeUpperCase(string.Join(",", types).ToLower());
 
             if (resultsPerPage > 0)
                 nvc["count"] = resultsPerPage.ToString();
@@ -93,7 +103,8 @@ namespace AlloCine
             if (pageNumber > 0)
                 nvc["page"] = pageNumber.ToString();
 
-            var searchQuery = string.Join("&", nvc.AllKeys.Select(k => string.Format("{0}={1}", k, nvc[k])));
+            //We create the final Query string including the call signature
+            var searchQuery = BuildSearchQueryWithSignature(ref nvc);
             var alObjectModel = DownloadData(string.Format(SearchUrl, searchQuery), typeof(AllocineObjectModel)) as AllocineObjectModel;
 
             if (alObjectModel != null)
@@ -147,39 +158,38 @@ namespace AlloCine
         public Movie MovieGetInfo(int movieCode, ResponseProfiles profile, IEnumerable<TypeFilters> types, IEnumerable<string> stripTags, IEnumerable<MediaFormat> mediaFormats)
         {
             var nvc = new NameValueCollection();
+
+            nvc["partner"] = AlloCinePartnerKey;
             nvc["format"] = ResponseFormat.Json.ToString().ToLower();
-
             nvc["code"] = movieCode.ToString().ToLower();
-
             nvc["profile"] = profile.ToString().ToLower();
 
             if (types != null)
-                nvc["filter"] = string.Join(",", types).ToLower();
+                nvc["filter"] = UrlEncodeUpperCase(string.Join(",", types).ToLower());
 
             if (stripTags != null)
-                nvc["striptags"] = string.Join(",", stripTags).ToLower();
+                nvc["striptags"] = UrlEncodeUpperCase(string.Join(",", stripTags).ToLower());
 
             if (mediaFormats != null)
-                nvc["mediafmt"] = string.Join(",", mediaFormats.ToList().ConvertAll(MediaFormatsGetValue));
+                nvc["mediafmt"] = UrlEncodeUpperCase(string.Join(",", mediaFormats.ToList().ConvertAll(MediaFormatsGetValue)));
 
+            //We create the final Query string including the call signature
+            var searchQuery = BuildSearchQueryWithSignature(ref nvc);
+            var alObjectModel = DownloadData(string.Format(MovieGetInfoUrl, searchQuery), typeof(AllocineObjectModel)) as AllocineObjectModel;
 
-            var searchQuery = string.Join("&", nvc.AllKeys.Select(k => string.Format("{0}={1}", k, nvc[k])));
-            var alObjectModel =
-                DownloadData(string.Format(MovieGetInfoUrl, searchQuery), typeof (AllocineObjectModel)) as
-                AllocineObjectModel;
-
-            if (alObjectModel != null )
+            if (alObjectModel != null)
             {   //If AlloCine returned an Error, we assigned the Error object to the Movie Error Object for easy check 
                 //from the class client side
                 if (alObjectModel.Error != null)
                 {
-                    alObjectModel.Movie = new Movie {Error = alObjectModel.Error};
+                    alObjectModel.Movie = new Movie { Error = alObjectModel.Error };
                 }
                 return alObjectModel.Movie;
             }
             return null;
 
         }
+
 
         /// <summary>
         /// Retrieves all information about a particular movie.
@@ -233,10 +243,10 @@ namespace AlloCine
         public Feed MovieGetReviewList(int movieCode, ReviewTypes type, int resultsPerPage, int pageNumber)
         {
             var nvc = new NameValueCollection();
+
+            nvc["partner"] = AlloCinePartnerKey;
             nvc["format"] = ResponseFormat.Json.ToString().ToLower();
-
             nvc["code"] = movieCode.ToString().ToLower();
-
             nvc["type"] = "movie";
 
             if (resultsPerPage > 0)
@@ -247,8 +257,8 @@ namespace AlloCine
 
             nvc["filter"] = ReviewTypesGetValue(type);
 
-
-            var searchQuery = string.Join("&", nvc.AllKeys.Select(k => string.Format("{0}={1}", k, nvc[k])));
+            //We create the final Query string including the call signature
+            var searchQuery = BuildSearchQueryWithSignature(ref nvc);
             var alObjectModel = DownloadData(string.Format(MovieGetReviewListUrl, searchQuery), typeof(AllocineObjectModel)) as AllocineObjectModel;
 
             if (alObjectModel != null)
@@ -275,16 +285,17 @@ namespace AlloCine
         public Person PersonGetInfo(int personCode, ResponseProfiles profile, IEnumerable<TypeFilters> types)
         {
             var nvc = new NameValueCollection();
+
+            nvc["partner"] = AlloCinePartnerKey;
             nvc["format"] = ResponseFormat.Json.ToString().ToLower();
-
             nvc["code"] = personCode.ToString().ToLower();
-
             nvc["profile"] = profile.ToString().ToLower();
 
             if (types != null)
-                nvc["filter"] = string.Join(",", types).ToLower();
+                nvc["filter"] = UrlEncodeUpperCase(string.Join(",", types).ToLower());
 
-            var searchQuery = string.Join("&", nvc.AllKeys.Select(k => string.Format("{0}={1}", k, nvc[k])));
+            //We create the final Query string including the call signature
+            var searchQuery = BuildSearchQueryWithSignature(ref nvc);
             var alObjectModel = DownloadData(string.Format(PersonGetInfoUrl, searchQuery), typeof(AllocineObjectModel)) as AllocineObjectModel;
 
             if (alObjectModel != null)
@@ -311,16 +322,17 @@ namespace AlloCine
         public Person PersonGetFilmography(int personCode, ResponseProfiles profile, IEnumerable<TypeFilters> types)
         {
             var nvc = new NameValueCollection();
+
+            nvc["partner"] = AlloCinePartnerKey;
             nvc["format"] = ResponseFormat.Json.ToString().ToLower();
-
             nvc["code"] = personCode.ToString().ToLower();
-
             nvc["profile"] = profile.ToString().ToLower();
 
             if (types != null)
-                nvc["filter"] = string.Join(",", types).ToLower();
+                nvc["filter"] = UrlEncodeUpperCase(string.Join(",", types).ToLower());
 
-            var searchQuery = string.Join("&", nvc.AllKeys.Select(k => string.Format("{0}={1}", k, nvc[k])));
+            //We create the final Query string including the call signature
+            var searchQuery = BuildSearchQueryWithSignature(ref nvc);
             var alObjectModel = DownloadData(string.Format(PersonGetFilmographyUrl, searchQuery), typeof(AllocineObjectModel)) as AllocineObjectModel;
 
             if (alObjectModel != null)
@@ -347,16 +359,17 @@ namespace AlloCine
         public Media MediaGetInfo(int mediaCode, ResponseProfiles profile, IEnumerable<MediaFormat> mediaFormats = null)
         {
             var nvc = new NameValueCollection();
+
+            nvc["partner"] = AlloCinePartnerKey;
             nvc["format"] = ResponseFormat.Json.ToString().ToLower();
-
             nvc["code"] = mediaCode.ToString().ToLower();
-
             nvc["profile"] = profile.ToString().ToLower();
 
             if (mediaFormats != null)
-                nvc["mediafmt"] = string.Join(",", mediaFormats.ToList().ConvertAll(MediaFormatsGetValue));
+                nvc["mediafmt"] = UrlEncodeUpperCase(string.Join(",", mediaFormats.ToList().ConvertAll(MediaFormatsGetValue)));
 
-            var searchQuery = string.Join("&", nvc.AllKeys.Select(k => string.Format("{0}={1}", k, nvc[k])));
+            //We create the final Query string including the call signature
+            var searchQuery = BuildSearchQueryWithSignature(ref nvc);
             var alObjectModel = DownloadData(string.Format(MediaGetInfoUrl, searchQuery), typeof(AllocineObjectModel)) as AllocineObjectModel;
 
             if (alObjectModel != null)
@@ -386,19 +399,20 @@ namespace AlloCine
         public TvSeries TvSeriesGetInfo(int tvseriesCode, ResponseProfiles profile, IEnumerable<string> stripTags, IEnumerable<MediaFormat> mediaFormats = null)
         {
             var nvc = new NameValueCollection();
+
+            nvc["partner"] = AlloCinePartnerKey;
             nvc["format"] = ResponseFormat.Json.ToString().ToLower();
-
             nvc["code"] = tvseriesCode.ToString().ToLower();
-
             nvc["profile"] = profile.ToString().ToLower();
 
             if (stripTags != null)
-                nvc["striptags"] = string.Join(",", stripTags).ToLower();
+                nvc["striptags"] = UrlEncodeUpperCase(string.Join(",", stripTags).ToLower());
 
             if (mediaFormats != null)
-                nvc["mediafmt"] = string.Join(",", mediaFormats.ToList().ConvertAll(MediaFormatsGetValue));
+                nvc["mediafmt"] = UrlEncodeUpperCase(string.Join(",", mediaFormats.ToList().ConvertAll(MediaFormatsGetValue)));
 
-            var searchQuery = string.Join("&", nvc.AllKeys.Select(k => string.Format("{0}={1}", k, nvc[k])));
+            //We create the final Query string including the call signature
+            var searchQuery = BuildSearchQueryWithSignature(ref nvc);
             var alObjectModel = DownloadData(string.Format(TvSeriesGetInfoUrl, searchQuery), typeof(AllocineObjectModel)) as AllocineObjectModel;
 
             if (alObjectModel != null)
@@ -428,19 +442,20 @@ namespace AlloCine
         public Season TvSeriesSeasonGetInfo(int seasonCode, ResponseProfiles profile, IEnumerable<string> stripTags, IEnumerable<MediaFormat> mediaFormats = null)
         {
             var nvc = new NameValueCollection();
+
+            nvc["partner"] = AlloCinePartnerKey;
             nvc["format"] = ResponseFormat.Json.ToString().ToLower();
-
             nvc["code"] = seasonCode.ToString().ToLower();
-
             nvc["profile"] = profile.ToString().ToLower();
 
             if (stripTags != null)
-                nvc["striptags"] = string.Join(",", stripTags).ToLower();
+                nvc["striptags"] = UrlEncodeUpperCase(string.Join(",", stripTags).ToLower());
 
             if (mediaFormats != null)
-                nvc["mediafmt"] = string.Join(",", mediaFormats.ToList().ConvertAll(MediaFormatsGetValue));
+                nvc["mediafmt"] = UrlEncodeUpperCase(string.Join(",", mediaFormats.ToList().ConvertAll(MediaFormatsGetValue)));
 
-            var searchQuery = string.Join("&", nvc.AllKeys.Select(k => string.Format("{0}={1}", k, nvc[k])));
+            //We create the final Query string including the call signature
+            var searchQuery = BuildSearchQueryWithSignature(ref nvc);
             var alObjectModel = DownloadData(string.Format(TvSeriesSeasonGetInfoUrl, searchQuery), typeof(AllocineObjectModel)) as AllocineObjectModel;
 
             if (alObjectModel != null)
@@ -470,19 +485,20 @@ namespace AlloCine
         public Episode TvSeriesEpisodeGetInfo(int episodeCode, ResponseProfiles profile, IEnumerable<string> stripTags, IEnumerable<MediaFormat> mediaFormats = null)
         {
             var nvc = new NameValueCollection();
+
+            nvc["partner"] = AlloCinePartnerKey;
             nvc["format"] = ResponseFormat.Json.ToString().ToLower();
-
             nvc["code"] = episodeCode.ToString().ToLower();
-
             nvc["profile"] = profile.ToString().ToLower();
 
             if (stripTags != null)
-                nvc["striptags"] = string.Join(",", stripTags).ToLower();
+                nvc["striptags"] = UrlEncodeUpperCase(string.Join(",", stripTags).ToLower());
 
             if (mediaFormats != null)
-                nvc["mediafmt"] = string.Join(",", mediaFormats.ToList().ConvertAll(MediaFormatsGetValue));
+                nvc["mediafmt"] = UrlEncodeUpperCase(string.Join(",", mediaFormats.ToList().ConvertAll(MediaFormatsGetValue)));
 
-            var searchQuery = string.Join("&", nvc.AllKeys.Select(k => string.Format("{0}={1}", k, nvc[k])));
+            //We create the final Query string including the call signature
+            var searchQuery = BuildSearchQueryWithSignature(ref nvc);
             var alObjectModel = DownloadData(string.Format(TvSeriesEpisodeGetInfoUrl, searchQuery), typeof(AllocineObjectModel)) as AllocineObjectModel;
 
             if (alObjectModel != null)
@@ -503,6 +519,9 @@ namespace AlloCine
         #region DownloadData Function
         private object DownloadData(string url, System.Type type)
         {
+            //Simulate the call as it was made from a Mobile device by setting the User Agent to an android browser
+            //The header must be redefined after each request
+            _client.Headers.Add("user-agent", MobileBrowserUserAgent);
             using (var stream = _client.OpenRead(url))
             {
                 if (stream == null)
@@ -525,7 +544,7 @@ namespace AlloCine
                 default:
                     return "";
             }
-        } 
+        }
         #endregion
 
         #region MediaFormatsGetValue Function
@@ -542,8 +561,53 @@ namespace AlloCine
                 default:
                     return "";
             }
-        } 
+        }
         #endregion
 
+        #region UrlEncodeUpperCase Function
+        /// <summary>
+        /// UrlEncode a string but ensures all escaped characters have their Hexadecimal notation in upper case
+        /// A special function is required to UrlEncode the Signature because of a particularity of the Dotnet URLEncode function.
+        /// For some reasons the DotNet function retursn the escaped characters in Lowercase while it is returned in Uppercase in PHP as described by the W3C.
+        /// So for instance the character "=" would be URLEncoded to "%3D", but the DotNet function will return "%3d", so the lower case equivalent.
+        /// Considering the signature is used as a Hash verification code on the receiving party it cannot mess-up with the characters case else the code is rejected
+        /// If the receiving party is expecting this "%2F7pfS95CRYGfAaVeqAVBS9PVT%2FA%3D", passing this "%2f7pfS95CRYGfAaVeqAVBS9PVT%2fA%3d" will be rejected 
+        /// and considered as incorrect. 
+        /// </summary>
+        /// <param name="stringToEncode">The string to encode</param>
+        /// <returns>Returns the Url encoded string</returns>
+        private string UrlEncodeUpperCase(string stringToEncode)
+        {
+            var reg = new Regex(@"%[a-f0-9]{2}");
+            stringToEncode = HttpUtility.UrlEncode(stringToEncode);
+            return reg.Replace(stringToEncode, m => m.Value.ToUpperInvariant());
+        }
+        #endregion
+
+        #region BuildSearchQueryWithSignature
+        /// <summary>
+        /// Create the Query string including the new URL signature AlloCine API expects
+        /// </summary>
+        /// <param name="nvc">The NameValueCollection containing all parameters of the Query string</param>
+        /// <returns>Returns the search Query string</returns>
+        private string BuildSearchQueryWithSignature(ref NameValueCollection nvc)
+        {
+            NameValueCollection collection = nvc;
+            nvc["sed"] = DateTime.Now.ToString("yyyyMMdd");
+
+            var searchQuery = string.Join("&", collection.AllKeys.Select(k => string.Format("{0}={1}", k, collection[k])));
+
+            string toEncrypt = AlloCineSecretKey + searchQuery;
+            string sig;
+            using (SHA1 sha = new SHA1CryptoServiceProvider())
+            {
+                //We do not forget to use our custom URLEncode function to have the escaped characters using Upper case as AlloCine is expecting
+                sig = UrlEncodeUpperCase(Convert.ToBase64String(sha.ComputeHash(Encoding.ASCII.GetBytes(toEncrypt))));
+            }
+            searchQuery += "&sig=" + sig;
+
+            return searchQuery;
+        }
+        #endregion
     }
 }

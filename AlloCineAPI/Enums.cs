@@ -19,6 +19,7 @@ namespace AlloCine
         Large
     }
 
+    //Not needed anymore the result "format" parameter in the AlloCine API has been removed
     public enum ResponseFormat
     {
         Json,

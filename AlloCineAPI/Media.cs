@@ -33,8 +33,11 @@ namespace AlloCine
         [DataMember(Name = "publication")]
         public Publication Publication { get; set; }
 
+        //[DataMember(Name = "copyrightHolder")]
+        //public CopyrightHolder CopyrightHolder { get; set; }
+
         [DataMember(Name = "copyrightHolder")]
-        public CopyrightHolder CopyrightHolder { get; set; }
+        public string CopyrightHolder { get; set; }
 
         public Error Error { get; set; }
     }

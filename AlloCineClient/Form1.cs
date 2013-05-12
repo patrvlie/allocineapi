@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using AlloCine;
+
 
 namespace AlloCineClient
 {
@@ -17,9 +17,9 @@ namespace AlloCineClient
         {
             //"ah si j'etais riche" = 42346
             var api = new AlloCineApi();
-            
+
             textBox1.AppendText("//Look for anything in Allocine that contains 'riche'");
-            var alFeed = api.Search("riche");
+            var alFeed = api.Search("riche", new[] { TypeFilters.Movie }, 8, 1);
             if (alFeed.Error != null)
             {
                 textBox1.AppendText("\r\n" + alFeed.Error.Value);
@@ -33,7 +33,7 @@ namespace AlloCineClient
             }
 
             textBox1.AppendText("\r\n\r\n\r\n//Retrieve the details of the Movie 'Ah si j'etais riche");
-            var alMovie = api.MovieGetInfo(42346, ResponseProfiles.Large,new[] {TypeFilters.Movie,TypeFilters.News}, new[] { "synopsis" },new[] {MediaFormat.Mpeg2}); 
+            var alMovie = api.MovieGetInfo(42346, ResponseProfiles.Large, new[] { TypeFilters.Movie, TypeFilters.News }, new[] { "synopsis" }, new[] { MediaFormat.Mpeg2 });
             if (alMovie.Error != null)
             {
                 textBox1.AppendText("\r\n" + alMovie.Error.Value);
@@ -44,7 +44,7 @@ namespace AlloCineClient
             }
 
             textBox1.AppendText("\r\n\r\n\r\n//Retrieve the details about the TvSeries 'Lost'");
-            var alTvSeries = api.TvSeriesGetInfo(223, ResponseProfiles.Small, null);
+            var alTvSeries = api.TvSeriesGetInfo(223, ResponseProfiles.Large, new[] { "synopsis" }, null);
             if (alTvSeries.Error != null)
             {
                 textBox1.AppendText("\r\n" + alTvSeries.Error.Value);

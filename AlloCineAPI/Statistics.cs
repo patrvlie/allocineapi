@@ -21,6 +21,9 @@ namespace AlloCine
         [DataMember(Name = "userRatingCount")]
         public string UserRatingCount { get; set; }
 
+        [DataMember(Name = "editorialRatingCount")]
+        public string EditorialRatingCount { get; set; }
+        
         [DataMember(Name = "commentCount")]
         public string CommentCount { get; set; }
 

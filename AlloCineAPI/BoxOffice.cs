@@ -17,6 +17,18 @@ namespace AlloCine
         [DataMember(Name = "week")]
         public string Week { get; set; }
 
+        [DataMember(Name = "gross")]
+        public string Gross { get; set; }
+
+        [DataMember(Name = "grossTotal")]
+        public string GrossTotal { get; set; }
+
+        //[DataMember(Name = "currency")]
+        //public string Currency { get; set; }
+
+        [DataMember(Name = "currency")]
+        public Currency Currency { get; set; }
+
         [DataMember(Name = "admissionCount")]
         public string AdmissionCount { get; set; }
 
