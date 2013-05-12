@@ -38,7 +38,7 @@ namespace AlloCine
         /// </summary>
         public AlloCineApi()
         {
-            _client = new WebClient {BaseAddress = AlloCineBaseAddress, Encoding = Encoding.UTF8};
+            _client = new WebClient { BaseAddress = AlloCineBaseAddress, Encoding = Encoding.UTF8 };
         }
 
         /// <summary>
@@ -522,13 +522,21 @@ namespace AlloCine
             //Simulate the call as it was made from a Mobile device by setting the User Agent to an android browser
             //The header must be redefined after each request
             _client.Headers.Add("user-agent", MobileBrowserUserAgent);
-            using (var stream = _client.OpenRead(url))
+
+            try
             {
-                if (stream == null)
-                    return null;
-                var dcs = new DataContractJsonSerializer(type);
-                var o = dcs.ReadObject(stream);
-                return o;
+                using (var stream = _client.OpenRead(url))
+                {
+                    if (stream == null)
+                        return null;
+                    var dcs = new DataContractJsonSerializer(type);
+                    var o = dcs.ReadObject(stream);
+                    return o;
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AllocineObjectModel() { Error = new Error() { Code = "Exception", Value = ex.Message } };
             }
         }
         #endregion
