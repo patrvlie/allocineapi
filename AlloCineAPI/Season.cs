@@ -7,22 +7,28 @@ namespace AlloCine
     public class Season
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "parentSeries")]
         public ParentSeries ParentSeries { get; set; }
 
         [DataMember(Name = "seasonNumber")]
-        public string SeasonNumber { get; set; }
+        public int SeasonNumber { get; set; }
 
         [DataMember(Name = "episodeCount")]
-        public string EpisodeCount { get; set; }
+        public int EpisodeCount { get; set; }
+
+        [DataMember(Name = "productionStatus")]
+        public ProductionStatus ProductionStatus { get; set; }
 
         [DataMember(Name = "yearStart")]
-        public string YearStart { get; set; }
+        public int YearStart { get; set; }
 
         [DataMember(Name = "yearEnd")]
-        public string YearEnd { get; set; }
+        public int YearEnd { get; set; }
+
+        [DataMember(Name = "trailerEmbed")]
+        public string TrailerEmbed { get; set; }
 
         [DataMember(Name = "castMember")]
         public List<CastMember> CastMemberList { get; set; }

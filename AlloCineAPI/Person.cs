@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Allocine.ExtensionMethods;
 
 namespace AlloCine
 {
@@ -7,7 +9,7 @@ namespace AlloCine
     public class Person
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "name")]
         public NameGivenFamily NameGivenFamily { get; set; }
@@ -31,7 +33,12 @@ namespace AlloCine
         public string Biography { get; set; }
 
         [DataMember(Name = "birthDate")]
-        public string BirthDate { get; set; }
+        private string BirthDateString
+        {
+            get { throw new NotImplementedException(); }
+            set { BirthDate = value.toDate(); }
+        }
+        public DateTime BirthDate { get; set; }
 
         [DataMember(Name = "birthPlace")]
         public string BirthPlace { get; set; }

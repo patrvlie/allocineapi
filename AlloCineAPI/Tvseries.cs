@@ -7,7 +7,7 @@ namespace AlloCine
     public class TvSeries
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "seriesType")]
         public SeriesType SeriesType { get; set; }
@@ -28,7 +28,7 @@ namespace AlloCine
         public OriginalChannel OriginalChannel { get; set; }
 
         [DataMember(Name = "formatTime")]
-        public string FormatTime { get; set; }
+        public int FormatTime { get; set; }
 
         [DataMember(Name = "productionStatus")]
         public ProductionStatus ProductionStatus { get; set; }
@@ -37,16 +37,22 @@ namespace AlloCine
         public List<Season> SeasonList { get; set; }
 
         [DataMember(Name = "seasonCount")]
-        public string SeasonCount { get; set; }
+        public int SeasonCount { get; set; }
 
         [DataMember(Name = "episodeCount")]
-        public string EpisodeCount { get; set; }
+        public int EpisodeCount { get; set; }
 
         [DataMember(Name = "yearStart")]
-        public string YearStart { get; set; }
+        public int YearStart { get; set; }
 
         [DataMember(Name = "yearEnd")]
-        public string YearEnd { get; set; }
+        public int YearEnd { get; set; }
+
+        [DataMember(Name = "hasBluRay")]
+        public int HasBluRay { get; set; }
+
+        [DataMember(Name = "hasDVD")]
+        public int HasDVD { get; set; }
 
         [DataMember(Name = "nationality")]
         public List<Nationality> NationalityList { get; set; }
@@ -71,6 +77,9 @@ namespace AlloCine
 
         [DataMember(Name = "trailer")]
         public Trailer Trailer { get; set; }
+
+        [DataMember(Name = "trailerEmbed")]
+        public string TrailerEmbed { get; set; }
 
         [DataMember(Name = "topBanner")]
         public TopBanner TopBanner { get; set; }
@@ -98,6 +107,12 @@ namespace AlloCine
 
         [DataMember(Name = "festivalAward")]
         public List<FestivalAward> FestivalAwardList { get; set; }
+
+        [DataMember(Name = "helpfulPositiveReview")]
+        public List<HelpfulPositiveReview> HelpfulPositiveReviewList { get; set; }
+
+        [DataMember(Name = "helpfulNegativeReview")]
+        public List<HelpfulNegativeReview> HelpfulNegativeReviewList { get; set; }
 
         public Error Error { get; set; }
     }

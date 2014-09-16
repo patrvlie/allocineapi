@@ -1,4 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
+using Allocine.ExtensionMethods;
 
 namespace AlloCine
 {
@@ -6,10 +8,15 @@ namespace AlloCine
     public class Review
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "creationDate")]
-        public string CreationDate { get; set; }
+        private string CreationDateString
+        {
+            get { throw new NotImplementedException(); }
+            set { CreationDate = value.toDate(); }
+        }
+        public DateTime CreationDate { get; set; }
 
         [DataMember(Name = "type")]
         public Type Type { get; set; }

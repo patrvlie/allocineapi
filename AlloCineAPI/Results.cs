@@ -9,7 +9,7 @@ namespace AlloCine
         public string Type { get; set; }
 
         [DataMember(Name = "$")]
-        public string Value { get; set; }
+        public int Value { get; set; }
     }
 }
 

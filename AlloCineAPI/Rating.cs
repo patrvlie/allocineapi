@@ -6,7 +6,7 @@ namespace AlloCine
     public class Rating
     {
         [DataMember(Name = "note")]
-        public string Note { get; set; }
+        public float Note { get; set; }
 
         [DataMember(Name = "$")]
         public string Value { get; set; }

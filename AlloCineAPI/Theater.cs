@@ -21,6 +21,24 @@ namespace AlloCine
         [DataMember(Name = "city")]
         public string City { get; set; }
 
+        [DataMember(Name = "subway")]
+        public string Subway { get; set; }
+
+        [DataMember(Name = "cinemaChain")]
+        public CinemaChain CinemaChain { get; set; }
+
+        [DataMember(Name = "screenCount")]
+        public int ScreenCount { get; set; }
+
+        [DataMember(Name = "geoloc")]
+        public Geoloc Geoloc { get; set; }
+
+        [DataMember(Name = "picture")]
+        public Picture Picture { get; set; }
+
+        [DataMember(Name = "hasPRMAccess")]
+        public int HasPRMAccess { get; set; }
+
         [DataMember(Name = "link")]
         public List<Link> LinkList { get; set; }
 

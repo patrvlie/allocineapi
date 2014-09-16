@@ -6,9 +6,12 @@ namespace AlloCine
     public class OriginalChannel
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "$")]
         public string Value { get; set; }
+
+        [DataMember(Name = "country")]
+        public Country Country { get; set; }
     }
 }

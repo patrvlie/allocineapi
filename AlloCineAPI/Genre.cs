@@ -6,7 +6,7 @@ namespace AlloCine
     public class Genre
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "$")]
         public string Value { get; set; }

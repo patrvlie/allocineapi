@@ -7,7 +7,7 @@ namespace AlloCine
     public class Feature
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "publication")]
         public Publication Publication { get; set; }

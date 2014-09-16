@@ -6,7 +6,7 @@ namespace AlloCine
     public class Distributor
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "name")]
         public string Name { get; set; }

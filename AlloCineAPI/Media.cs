@@ -10,10 +10,10 @@ namespace AlloCine
         public string Class { get; set; }
 
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "rcode")]
-        public string Rcode { get; set; }
+        public int Rcode { get; set; }
 
         [DataMember(Name = "type")]
         public Type Type { get; set; }
@@ -33,8 +33,8 @@ namespace AlloCine
         [DataMember(Name = "publication")]
         public Publication Publication { get; set; }
 
-        //[DataMember(Name = "copyrightHolder")]
-        //public CopyrightHolder CopyrightHolder { get; set; }
+        [DataMember(Name = "version")]
+        public Version Version { get; set; }
 
         [DataMember(Name = "copyrightHolder")]
         public string CopyrightHolder { get; set; }

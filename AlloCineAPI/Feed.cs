@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Allocine.ExtensionMethods;
 
 namespace AlloCine
 {
@@ -7,16 +9,16 @@ namespace AlloCine
     public class Feed
     {
         [DataMember(Name = "page")]
-        public string Page { get; set; }
+        public int Page { get; set; }
 
         [DataMember(Name = "count")]
-        public string Count { get; set; }
+        public int Count { get; set; }
 
         [DataMember(Name = "results")]
         public List<Results> ResultsList { get; set; }
 
         [DataMember(Name = "totalResults")]
-        public string TotalResults { get; set; }
+        public int TotalResults { get; set; }
 
         [DataMember(Name = "movie")]
         public List<Movie> MovieList { get; set; }
@@ -40,10 +42,18 @@ namespace AlloCine
         public List<Media> MediaList { get; set; }
 
         [DataMember(Name = "updated")]
-        public string Updated { get; set; }
+        private string UpdatedString
+        {
+            get { throw new NotImplementedException(); }
+            set { Updated = value.toDate(); }
+        }
+        public DateTime Updated { get; set; }
 
         [DataMember(Name = "review")]
         public List<Review> ReviewList { get; set; }
+
+        [DataMember(Name = "theaterShowtimes")]
+        public List<TheaterShowtime> TheaterShowtimeList { get; set; }
 
         public Error Error { get; set; }
     }

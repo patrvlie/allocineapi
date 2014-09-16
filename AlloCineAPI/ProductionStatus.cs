@@ -6,7 +6,7 @@ namespace AlloCine
     public class ProductionStatus
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "$")]
         public string Value { get; set; }

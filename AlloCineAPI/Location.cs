@@ -7,7 +7,7 @@ namespace AlloCine
     public class Location
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "parent")]
         public Parent Parent { get; set; }

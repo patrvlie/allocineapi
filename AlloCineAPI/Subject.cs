@@ -9,6 +9,6 @@ namespace AlloCine
         public string Scheme { get; set; }
 
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
     }
 }

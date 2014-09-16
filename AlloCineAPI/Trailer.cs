@@ -9,7 +9,7 @@ namespace AlloCine
         public string Name { get; set; }
 
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "href")]
         public string Href { get; set; }

@@ -7,7 +7,7 @@ namespace AlloCine
     public class News
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "publication")]
         public Publication Publication { get; set; }
@@ -17,6 +17,9 @@ namespace AlloCine
 
         [DataMember(Name = "picture")]
         public NewsPicture Picture { get; set; }
+
+        [DataMember(Name = "displayMode")]
+        public DisplayMode DisplayMode { get; set; }
 
         [DataMember(Name = "category")]
         public List<Category> CategoryList { get; set; }

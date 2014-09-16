@@ -6,7 +6,7 @@ namespace AlloCine
     public class FestivalAward
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "parentFestival")]
         public ParentFestival ParentFestival { get; set; }

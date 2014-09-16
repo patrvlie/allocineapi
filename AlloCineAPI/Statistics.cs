@@ -7,31 +7,52 @@ namespace AlloCine
     public class Statistics
     {
         [DataMember(Name = "pressRating")]
-        public string PressRating { get; set; }
+        public float PressRating { get; set; }
 
         [DataMember(Name = "pressReviewCount")]
-        public string PressReviewCount { get; set; }
+        public int PressReviewCount { get; set; }
 
         [DataMember(Name = "userRating")]
-        public string UserRating { get; set; }
+        public float UserRating { get; set; }
 
         [DataMember(Name = "userReviewCount")]
-        public string UserReviewCount { get; set; }
+        public int UserReviewCount { get; set; }
 
         [DataMember(Name = "userRatingCount")]
-        public string UserRatingCount { get; set; }
+        public int UserRatingCount { get; set; }
+
+        [DataMember(Name = "averageViewerCount")]
+        public int AverageViewerCount { get; set; }
 
         [DataMember(Name = "editorialRatingCount")]
-        public string EditorialRatingCount { get; set; }
+        public int EditorialRatingCount { get; set; }
         
         [DataMember(Name = "commentCount")]
-        public string CommentCount { get; set; }
+        public int CommentCount { get; set; }
 
         [DataMember(Name = "photoCount")]
-        public string PhotoCount { get; set; }
+        public int PhotoCount { get; set; }
 
         [DataMember(Name = "videoCount")]
-        public string VideoCount { get; set; }
+        public int VideoCount { get; set; }
+
+        [DataMember(Name = "triviaCount")]
+        public int TriviaCount { get; set; }
+
+        [DataMember(Name = "newsCount")]
+        public int newsCount { get; set; }
+
+        [DataMember(Name = "rankTopMovie")]
+        public int RankTopMovie { get; set; }
+
+        [DataMember(Name = "variationTopMovie")]
+        public int VariationTopMovie { get; set; }
+
+        [DataMember(Name = "awardCount")]
+        public int AwardCount { get; set; }
+
+        [DataMember(Name = "nominationCount")]
+        public int NominationCount { get; set; }
 
         [DataMember(Name = "rating")]
         public List<Rating> RatingList { get; set; }
@@ -40,13 +61,19 @@ namespace AlloCine
         public List<RatingStats> RatingStats { get; set; }
 
         [DataMember(Name = "fanCount")]
-        public string FanCount { get; set; }
+        public int FanCount { get; set; }
+
+        [DataMember(Name = "wantToSeeCount")]
+        public int WantToSeeCount { get; set; }
 
         [DataMember(Name = "releaseWeekPosition")]
-        public string ReleaseWeekPosition { get; set; }
+        public int ReleaseWeekPosition { get; set; }
+
+        [DataMember(Name = "admissionCount")]
+        public int AdmissionCount { get; set; }
 
         [DataMember(Name = "theaterCount")]
-        public string TheaterCount { get; set; }
+        public int TheaterCount { get; set; }
 
         [DataMember(Name = "theaterCountOnRelease")]
         public string TheaterCountOnRelease { get; set; }

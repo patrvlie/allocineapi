@@ -15,7 +15,7 @@ namespace AlloCine
         public Period Period { get; set; }
 
         [DataMember(Name = "week")]
-        public string Week { get; set; }
+        public int Week { get; set; }
 
         [DataMember(Name = "gross")]
         public string Gross { get; set; }
@@ -30,13 +30,13 @@ namespace AlloCine
         public Currency Currency { get; set; }
 
         [DataMember(Name = "admissionCount")]
-        public string AdmissionCount { get; set; }
+        public int AdmissionCount { get; set; }
 
         [DataMember(Name = "admissionCountTotal")]
-        public string AdmissionCountTotal { get; set; }
+        public int AdmissionCountTotal { get; set; }
 
         [DataMember(Name = "copyCount")]
-        public string CopyCount { get; set; }
+        public int CopyCount { get; set; }
 
     }
 }

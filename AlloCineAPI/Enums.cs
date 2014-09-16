@@ -3,6 +3,12 @@ using System.Collections.Specialized;
 
 namespace AlloCine
 {
+    internal enum ProxyMode
+    {
+        NoProxy,
+        DefaultProxy,
+        GivenProxy
+    }
     public enum TypeFilters
     {
         Movie,
@@ -31,8 +37,7 @@ namespace AlloCine
         DeskPress,
         Public
     }
-
-
+    
     public enum MediaFormat
     {
         Flv ,
@@ -42,5 +47,19 @@ namespace AlloCine
         Mp4Archive,
         Mpeg2Theater,
         Mpeg2
+    }
+
+    public enum MovieListFilters
+    {
+        NowShowing,
+        ComingSoon 
+    }
+
+    public enum MovieListOrder
+    {
+        DateDesc,
+        DateAsc,
+        TheaterCount,
+        TopRank
     }
 }

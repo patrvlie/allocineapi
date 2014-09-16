@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Allocine.ExtensionMethods;
 
 namespace AlloCine
 {
@@ -7,7 +9,7 @@ namespace AlloCine
     public class Episode
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "parentSeries")]
         public ParentSeries ParentSeries { get; set; }
@@ -19,7 +21,12 @@ namespace AlloCine
         public string OriginalTitle { get; set; }
 
         [DataMember(Name = "originalBroadcastDate")]
-        public string OriginalBroadcastDate { get; set; }
+        private string OriginalBroadcastDateString
+        {
+            get { throw new NotImplementedException(); }
+            set { OriginalBroadcastDate = value.toDate(); }
+        }
+        public DateTime OriginalBroadcastDate { get; set; }
 
         [DataMember(Name = "title")]
         public string Title { get; set; }

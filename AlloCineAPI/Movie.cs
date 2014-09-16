@@ -7,7 +7,7 @@ namespace AlloCine
     public class Movie
     {
         [DataMember(Name = "code")]
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         [DataMember(Name = "movieType")]
         public MovieType MovieType { get; set; }
@@ -22,7 +22,7 @@ namespace AlloCine
         public string Keywords { get; set; }
 
         [DataMember(Name = "productionYear")]
-        public string ProductionYear { get; set; }
+        public int ProductionYear { get; set; }
 
         [DataMember(Name = "nationality")]
         public List<Nationality> NationalityList { get; set; }
@@ -69,6 +69,12 @@ namespace AlloCine
         [DataMember(Name = "trailerEmbed")]
         public string TrailerEmbed { get; set; }
 
+        [DataMember(Name = "defaultMedia")]
+        public DefaultMedia DefaultMedia { get; set; }
+
+        [DataMember(Name = "hasShowtime")]
+        public int HasShowtime { get; set; }
+
         [DataMember(Name = "link")]
         public List<Link> LinkList { get; set; }
 
@@ -95,6 +101,12 @@ namespace AlloCine
 
         [DataMember(Name = "boxOffice")]
         public List<BoxOffice> BoxOfficeList { get; set; }
+
+        [DataMember(Name = "helpfulPositiveReview")]
+        public List<HelpfulPositiveReview> HelpfulPositiveReviewList { get; set; }
+
+        [DataMember(Name = "helpfulNegativeReview")]
+        public List<HelpfulNegativeReview> HelpfulNegativeReviewList { get; set; }
 
         public Error Error { get; set; }
 

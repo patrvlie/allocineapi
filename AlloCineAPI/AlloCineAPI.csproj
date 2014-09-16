@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AlloCine</RootNamespace>
     <AssemblyName>AlloCineAPI</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\AlloCineAPI.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,10 +33,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\AlloCineAPI.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Device" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
@@ -45,9 +49,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultMedia.cs" />
+    <Compile Include="OnShow.cs" />
+    <Compile Include="ScreenFormat.cs" />
+    <Compile Include="Scr.cs" />
+    <Compile Include="T.cs" />
+    <Compile Include="Version.cs" />
+    <Compile Include="Place.cs" />
+    <Compile Include="MovieShowtime.cs" />
+    <Compile Include="TheaterShowtime.cs" />
     <Compile Include="Activity.cs" />
     <Compile Include="AlloCineApi.cs" />
     <Compile Include="AllocineObjectModel.cs" />
+    <Compile Include="CinemaChain.cs" />
+    <Compile Include="Event.cs" />
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="HelpfulNegativeReview.cs" />
+    <Compile Include="HelpfulPositiveReview.cs" />
     <Compile Include="CopyrightHolder.cs" />
     <Compile Include="Country.cs">
       <SubType>Code</SubType>
@@ -56,6 +74,8 @@
     <Compile Include="Episode.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DisplayMode.cs" />
+    <Compile Include="Writer.cs" />
     <Compile Include="Link.cs">
       <SubType>Code</SubType>
     </Compile>
